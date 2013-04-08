@@ -1,4 +1,5 @@
 import webapp2
+import cgi
 
 form="""
 <form method="post">
@@ -22,6 +23,13 @@ form="""
 	<input type="submit">
 </form>
 """
+
+def escape_html(s):
+  return cgi.escape(s, quote = True)
+
+class ThanksHandler(webapp2.RequestHandler):
+  def get(self):
+    self.response.out.write("Thank you! Valid date!")
 
 class MainPage(webapp2.RequestHandler):
 
@@ -60,9 +68,32 @@ class MainPage(webapp2.RequestHandler):
     return None
 
   def write_form(self, error="", month="", day="", year=""):
-    self.response.out.write(form % ({'error':error, 'month':month, 'year':year, 'day':day}))
-
-
+    self.response.out.write(form % ({'error':error, 'month':escape_html(month),\
+                                     'year':escape_html(year), 'day':escape_html(day)}))
+  """  
+  def escape_html(self, s):
+    return cgi.escape(s, quote = True)
+    
+    #&amp; should be first
+    for (i,o) in (('>', '&gt;'),('<','&lt;'),('&','&amp;'),('"', '&quot;')):
+      s = s.replace(i,o)
+    return s
+    
+    temp = ''
+    for i in s:
+        if i == '&':
+            temp = temp + '&amp;'
+        elif i == '<':
+            temp = temp + '&lt;'
+        elif i == '"':
+            temp = temp + '&quot;'
+        elif i == '>':
+            temp = temp + '&gt;'
+        else:
+            temp = temp + i
+    return temp
+    
+  """
   def get(self):
     #self.response.headers['Content-Type'] = 'text/plain'
     self.write_form()
@@ -79,7 +110,8 @@ class MainPage(webapp2.RequestHandler):
     if not (month and day and year):
       self.write_form("Invalid, friend", user_month, user_day, user_year)
     else:
-      self.response.out.write("Valid!")
+      self.redirect('/thanks')
 
 
-app = webapp2.WSGIApplication([('/', MainPage)], debug=True)
+app = webapp2.WSGIApplication([('/', MainPage),
+                               ('/thanks', ThanksHandler)], debug=True)
