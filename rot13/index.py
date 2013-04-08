@@ -5,7 +5,7 @@ form="""
 <form method="post">
   <h2>Enter text here for ROT13 Coversion</h2>
   <br>
-  <textarea name="rawtext" cols="45" rows="5">%(textvalue)s</textarea>
+  <textarea name="text" cols="45" rows="5">%(textvalue)s</textarea>
 	<br>
   <br>
 	<input type="submit">
@@ -51,7 +51,7 @@ class MainPage(webapp2.RequestHandler):
     self.write_form()
 
   def post(self):
-    user_data = self.request.get('rawtext')
+    user_data = self.request.get('text')
     textvalue = get_rot13(user_data)
 
     if user_data:
