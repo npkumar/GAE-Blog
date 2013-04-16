@@ -1,4 +1,4 @@
 GAE-Python
 ==========
 
-GAE experimentation
+Custom Blog using Google App Engine
