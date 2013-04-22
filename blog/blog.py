@@ -82,7 +82,7 @@ class NewPost(BlogHandler):
 
 
 
-###### Unit 2 HW's
+###### rot13
 class Rot13(BlogHandler):
     def get(self):
         self.render('rot13-form.html')
